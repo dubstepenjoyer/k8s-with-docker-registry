@@ -221,3 +221,5 @@ sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 ```
 
 # I used this [guide](https://www.heyvaldemar.net/ustanovka-kubernetes-na-ubuntu-server-22-04-lts/) and [docker documentation](https://docs.docker.com/engine/install/ubuntu/)
+
+# Now go to ```./certs``` and read ```.md``` file
