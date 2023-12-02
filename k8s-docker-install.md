@@ -104,6 +104,10 @@ sudo apt install -y curl gnupg2 software-properties-common apt-transport-https c
 ```
 
 ```
+containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
+```
+
+```
 sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
 ```
 
@@ -116,6 +120,10 @@ sudo systemctl enable containerd
 ```
 
 ### Connection k8s repository
+
+```
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+```
 
 ```
 sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
@@ -133,5 +141,83 @@ sudo apt install -y kubelet kubeadm kubectl
 
 ```
 sudo apt-mark hold kubelet kubeadm kubectl
+```
+
+# END OF WORKER INSTALLATION
+
+## Run below commands on your master-node to make it master
 
 ```
+sudo kubeadm init --control-plane-endpoint=master-node
+```
+
+```
+mkdir -p $HOME/.kube
+```
+
+```
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+```
+
+```
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+Run this to see a command that you need to run on your worker node to add it.
+
+```
+kubeadm token create --print-join-command
+```
+
+## Add Calico
+
+```
+curl https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml -O
+```
+
+## Install Calico
+
+```
+kubectl apply -f calico.yaml
+```
+
+# Addition
+
+## Docker installation
+
+```
+sudo apt update
+```
+
+```
+sudo apt install ca-certificates gnupg
+```
+
+```
+sudo install -m 0755 -d /etc/apt/keyrings
+```
+
+```
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+```
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+```
+
+```
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+```
+sudo apt update
+```
+
+```
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+# I used this [guide](https://www.heyvaldemar.net/ustanovka-kubernetes-na-ubuntu-server-22-04-lts/) and [docker documentation](https://docs.docker.com/engine/install/ubuntu/)

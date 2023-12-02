@@ -3,7 +3,7 @@ version: '3.8'
 services:
   registry:
     image: registry:2
-    container_name: local-docker-dse-registry
+    container_name: local-docker-registry
     ports:
       - 5000:5000
     restart: always
