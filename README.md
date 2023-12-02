@@ -220,6 +220,20 @@ sudo apt update
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
+## To avoid some issues with docker permissions do [this](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
+
+```
+sudo groupadd docker
+```
+
+```
+sudo usermod -aG docker $USER
+```
+
+```
+newgrp docker
+```
+
 # I used this [guide](https://www.heyvaldemar.net/ustanovka-kubernetes-na-ubuntu-server-22-04-lts/) and [docker documentation](https://docs.docker.com/engine/install/ubuntu/)
 
 # Now go to ```./certs``` and read ```.md``` file
